@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: cohorthub
+      POSTGRES_USER: cohort
+      POSTGRES_PASSWORD: cohort
+    volumes:
+      - cohort-db:/var/lib/postgresql/data
+    # Not published to the host: the API reaches it over the compose network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cohort -d cohorthub"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      COHORT_DATABASE_URL: postgresql+psycopg://cohort:cohort@db:5432/cohorthub
+      COHORT_SUBJECT_SALT: change-me-in-real-deployments
+    ports:
+      - "8000:8000"
+
+volumes:
+  cohort-db:

@@ -1,0 +1,70 @@
+{
+  "version": "v1.0",
+  "rules": {
+    "index_date": {
+      "basis": "first_visit",
+      "merge_visit_types": [
+        "screening",
+        "baseline"
+      ]
+    },
+    "consent": {
+      "required": true
+    },
+    "inclusion": {
+      "age_min": 18,
+      "age_max": 75,
+      "diagnosis": {
+        "codes": [
+          "T2DM"
+        ],
+        "window_days": 3650
+      },
+      "lab": {
+        "code": "CREATININE",
+        "study_unit": "mg/dL",
+        "min": 0.4,
+        "max": 2.0,
+        "window_days_before": 30,
+        "window_days_after": 0
+      },
+      "medication": {
+        "codes": [
+          "METFORMIN"
+        ],
+        "within_days_after_index": 30
+      }
+    },
+    "exclusion": {
+      "diagnosis": {
+        "codes": [
+          "ADV"
+        ]
+      },
+      "lab": {
+        "code": "HEMOGLOBIN",
+        "max": 8.0,
+        "window_days_before": 30
+      }
+    },
+    "follow_up": {
+      "visits": [
+        {
+          "day": 30,
+          "kind": "safety"
+        },
+        {
+          "day": 90,
+          "kind": "efficacy"
+        },
+        {
+          "day": 180,
+          "kind": "efficacy"
+        }
+      ]
+    },
+    "safety": {
+      "allow_retention_after_withdrawal": true
+    }
+  }
+}

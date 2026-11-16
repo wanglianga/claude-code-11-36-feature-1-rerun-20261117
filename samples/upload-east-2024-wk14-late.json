@@ -1,0 +1,58 @@
+{
+  "center_code": "EAST",
+  "batch_code": "east-2024-wk14-late",
+  "records": [
+    {
+      "record_type": "case",
+      "source_uid": "EAST-P-E02-CASE",
+      "patient_ref": "P-E02",
+      "family_initial": "G",
+      "given_initial": "H",
+      "sex": "男",
+      "birth_date": "03.03.1982",
+      "first_visit_date": "20.03.2024",
+      "enrollment_date": "20.03.2024",
+      "treatment_code": "INTENSIVE"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "EAST-P-E02-DX",
+      "patient_ref": "P-E02",
+      "code": "T2DM",
+      "diagnosis_date": "01.06.2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E02-LAB-CREATININE-1",
+      "patient_ref": "P-E02",
+      "code": "SCR",
+      "value": "0.8",
+      "unit": "mg/dL",
+      "collected_at": "15.03.2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "EAST-P-E02-MED",
+      "patient_ref": "P-E02",
+      "code": "BIG",
+      "start_date": "22.03.2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "EAST-P-E02-CONSENT",
+      "patient_ref": "P-E02",
+      "status": "同意",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "EAST-P-E02-FU-1",
+      "patient_ref": "P-E02",
+      "visit_date": "20.03.2024",
+      "visit_type": "screening",
+      "response": "good"
+    }
+  ]
+}

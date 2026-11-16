@@ -1,0 +1,26 @@
+{
+  "NORTH": {
+    "name": "North Teaching Hospital (fictional)",
+    "config": {
+      "date_formats": [
+        "%Y-%m-%d"
+      ]
+    }
+  },
+  "SOUTH": {
+    "name": "South General Hospital (fictional)",
+    "config": {
+      "date_formats": [
+        "%d/%m/%Y"
+      ]
+    }
+  },
+  "EAST": {
+    "name": "East Community Hospital (fictional)",
+    "config": {
+      "date_formats": [
+        "%d.%m.%Y"
+      ]
+    }
+  }
+}

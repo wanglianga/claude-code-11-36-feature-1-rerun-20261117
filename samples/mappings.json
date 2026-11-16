@@ -1,0 +1,296 @@
+{
+  "NORTH": [
+    {
+      "center_code": "NORTH",
+      "kind": "sex",
+      "source_code": "M",
+      "study_code": "M"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "sex",
+      "source_code": "F",
+      "study_code": "F"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "diagnosis",
+      "source_code": "T2DM",
+      "study_code": "T2DM"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "diagnosis",
+      "source_code": "T1DM",
+      "study_code": "T1DM"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "diagnosis",
+      "source_code": "ADV",
+      "study_code": "ADV"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "lab",
+      "source_code": "CREA",
+      "study_code": "CREATININE"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "lab",
+      "source_code": "HGB",
+      "study_code": "HEMOGLOBIN"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "lab",
+      "source_code": "A1C",
+      "study_code": "HBA1C"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "medication",
+      "source_code": "MET",
+      "study_code": "METFORMIN"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "medication",
+      "source_code": "OTH",
+      "study_code": "OTHER"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "consent",
+      "source_code": "Y",
+      "study_code": "granted"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "consent",
+      "source_code": "N",
+      "study_code": "withdrawn"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "consent",
+      "source_code": "D",
+      "study_code": "declined"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "response",
+      "source_code": "CR",
+      "study_code": "CR"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "response",
+      "source_code": "PR",
+      "study_code": "PR"
+    },
+    {
+      "center_code": "NORTH",
+      "kind": "response",
+      "source_code": "PD",
+      "study_code": "PD"
+    }
+  ],
+  "SOUTH": [
+    {
+      "center_code": "SOUTH",
+      "kind": "sex",
+      "source_code": "1",
+      "study_code": "M"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "sex",
+      "source_code": "2",
+      "study_code": "F"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "diagnosis",
+      "source_code": "E11",
+      "study_code": "T2DM"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "diagnosis",
+      "source_code": "E10",
+      "study_code": "T1DM"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "diagnosis",
+      "source_code": "RARE",
+      "study_code": "ADV"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "lab",
+      "source_code": "KREA",
+      "study_code": "CREATININE"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "lab",
+      "source_code": "HB",
+      "study_code": "HEMOGLOBIN"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "lab",
+      "source_code": "A1C",
+      "study_code": "HBA1C"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "medication",
+      "source_code": "M-01",
+      "study_code": "METFORMIN"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "medication",
+      "source_code": "M-02",
+      "study_code": "OTHER"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "consent",
+      "source_code": "granted",
+      "study_code": "granted"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "consent",
+      "source_code": "withdrawn",
+      "study_code": "withdrawn"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "consent",
+      "source_code": "declined",
+      "study_code": "declined"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "response",
+      "source_code": "1",
+      "study_code": "CR"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "response",
+      "source_code": "2",
+      "study_code": "PR"
+    },
+    {
+      "center_code": "SOUTH",
+      "kind": "response",
+      "source_code": "3",
+      "study_code": "PD"
+    }
+  ],
+  "EAST": [
+    {
+      "center_code": "EAST",
+      "kind": "sex",
+      "source_code": "男",
+      "study_code": "M"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "sex",
+      "source_code": "女",
+      "study_code": "F"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "diagnosis",
+      "source_code": "T2DM",
+      "study_code": "T2DM"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "diagnosis",
+      "source_code": "T1DM",
+      "study_code": "T1DM"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "diagnosis",
+      "source_code": "ADV",
+      "study_code": "ADV"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "lab",
+      "source_code": "SCR",
+      "study_code": "CREATININE"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "lab",
+      "source_code": "HGB",
+      "study_code": "HEMOGLOBIN"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "lab",
+      "source_code": "A1C",
+      "study_code": "HBA1C"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "medication",
+      "source_code": "BIG",
+      "study_code": "METFORMIN"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "medication",
+      "source_code": "OTH",
+      "study_code": "OTHER"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "consent",
+      "source_code": "同意",
+      "study_code": "granted"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "consent",
+      "source_code": "撤回",
+      "study_code": "withdrawn"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "consent",
+      "source_code": "拒绝",
+      "study_code": "declined"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "response",
+      "source_code": "good",
+      "study_code": "CR"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "response",
+      "source_code": "ok",
+      "study_code": "PR"
+    },
+    {
+      "center_code": "EAST",
+      "kind": "response",
+      "source_code": "poor",
+      "study_code": "PD"
+    }
+  ]
+}

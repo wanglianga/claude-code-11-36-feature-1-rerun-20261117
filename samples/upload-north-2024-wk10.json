@@ -1,0 +1,370 @@
+{
+  "center_code": "NORTH",
+  "batch_code": "north-2024-wk10",
+  "records": [
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N01-CASE",
+      "patient_ref": "P-N01",
+      "family_initial": "K",
+      "given_initial": "M",
+      "sex": "F",
+      "birth_date": "1970-03-05",
+      "first_visit_date": "2024-02-01",
+      "enrollment_date": "2024-02-01",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N01-DX",
+      "patient_ref": "P-N01",
+      "code": "T2DM",
+      "diagnosis_date": "2023-11-01"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N01-LAB-CREATININE-1",
+      "patient_ref": "P-N01",
+      "code": "CREA",
+      "value": "1.2",
+      "unit": "mg/dL",
+      "collected_at": "2024-01-25"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N01-MED",
+      "patient_ref": "P-N01",
+      "code": "MET",
+      "start_date": "2024-02-03",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N01-CONSENT",
+      "patient_ref": "P-N01",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N01-FU-1",
+      "patient_ref": "P-N01",
+      "visit_date": "2024-02-01",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N02-CASE",
+      "patient_ref": "P-N02",
+      "family_initial": "L",
+      "given_initial": "Q",
+      "sex": "M",
+      "birth_date": "1965-07-12",
+      "first_visit_date": "2024-02-10",
+      "enrollment_date": "2024-02-10",
+      "treatment_code": "INTENSIVE"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N02-DX",
+      "patient_ref": "P-N02",
+      "code": "T2DM",
+      "diagnosis_date": "2022-05-01"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N02-LAB-CREATININE-1",
+      "patient_ref": "P-N02",
+      "code": "CREA",
+      "value": "0.9",
+      "unit": "mg/dL",
+      "collected_at": "2024-02-05"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N02-MED",
+      "patient_ref": "P-N02",
+      "code": "MET",
+      "start_date": "2024-02-12",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N02-CONSENT",
+      "patient_ref": "P-N02",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N02-FU-1",
+      "patient_ref": "P-N02",
+      "visit_date": "2024-02-10",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N02-FU-2",
+      "patient_ref": "P-N02",
+      "visit_date": "2024-02-10",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N03-CASE",
+      "patient_ref": "P-N03",
+      "family_initial": "R",
+      "given_initial": "S",
+      "sex": "F",
+      "birth_date": "1940-01-01",
+      "first_visit_date": "2024-02-15",
+      "enrollment_date": "2024-02-15",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N03-DX",
+      "patient_ref": "P-N03",
+      "code": "T2DM",
+      "diagnosis_date": "2023-01-05"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N03-LAB-CREATININE-1",
+      "patient_ref": "P-N03",
+      "code": "CREA",
+      "value": "1.0",
+      "unit": "mg/dL",
+      "collected_at": "2024-02-10"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N03-MED",
+      "patient_ref": "P-N03",
+      "code": "MET",
+      "start_date": "2024-02-16",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N03-CONSENT",
+      "patient_ref": "P-N03",
+      "status": "N",
+      "allow_retention": true,
+      "withdrawal_date": "2024-03-01"
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N03-FU-1",
+      "patient_ref": "P-N03",
+      "visit_date": "2024-02-15",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N04-CASE",
+      "patient_ref": "P-N04",
+      "family_initial": "T",
+      "given_initial": "V",
+      "sex": "M",
+      "birth_date": "1980-04-20",
+      "first_visit_date": "2024-03-01",
+      "enrollment_date": "2024-03-01",
+      "treatment_code": "INTENSIVE"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N04-DX",
+      "patient_ref": "P-N04",
+      "code": "T2DM",
+      "diagnosis_date": "2023-06-01"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N04-LAB-CREATININE-1",
+      "patient_ref": "P-N04",
+      "code": "CREA",
+      "value": "176.8",
+      "unit": "µmol/L",
+      "collected_at": "2024-02-28"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N04-MED",
+      "patient_ref": "P-N04",
+      "code": "MET",
+      "start_date": "2024-03-03",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N04-CONSENT",
+      "patient_ref": "P-N04",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N04-FU-1",
+      "patient_ref": "P-N04",
+      "visit_date": "2024-03-01",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N05-CASE",
+      "patient_ref": "P-N05",
+      "family_initial": "W",
+      "given_initial": "X",
+      "sex": "M",
+      "birth_date": "1955-09-09",
+      "first_visit_date": "2024-03-05",
+      "enrollment_date": "2024-03-05",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N05-DX",
+      "patient_ref": "P-N05",
+      "code": "ADV",
+      "diagnosis_date": "2023-09-01"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N05-LAB-CREATININE-1",
+      "patient_ref": "P-N05",
+      "code": "CREA",
+      "value": "1.1",
+      "unit": "mg/dL",
+      "collected_at": "2024-03-01"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N05-MED",
+      "patient_ref": "P-N05",
+      "code": "MET",
+      "start_date": "2024-03-07",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N05-CONSENT",
+      "patient_ref": "P-N05",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N05-FU-1",
+      "patient_ref": "P-N05",
+      "visit_date": "2024-03-05",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N06-CASE",
+      "patient_ref": "P-N06",
+      "family_initial": "Y",
+      "given_initial": "Z",
+      "sex": "F",
+      "birth_date": "1990-02-02",
+      "first_visit_date": "2024-03-10",
+      "enrollment_date": "2024-03-10",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N06-DX",
+      "patient_ref": "P-N06",
+      "code": "T2DM",
+      "diagnosis_date": "2023-12-01"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N06-MED",
+      "patient_ref": "P-N06",
+      "code": "MET",
+      "start_date": "2024-03-12",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N06-CONSENT",
+      "patient_ref": "P-N06",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N06-FU-1",
+      "patient_ref": "P-N06",
+      "visit_date": "2024-03-10",
+      "visit_type": "screening",
+      "response": "CR"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "NORTH-P-N07-CASE",
+      "patient_ref": "P-N07",
+      "family_initial": "C",
+      "given_initial": "D",
+      "sex": "M",
+      "birth_date": "1972-06-06",
+      "first_visit_date": "2024-04-01",
+      "enrollment_date": "2024-04-01",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "NORTH-P-N07-DX",
+      "patient_ref": "P-N07",
+      "code": "T2DM",
+      "diagnosis_date": "2023-10-01"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N07-LAB-CREATININE-1",
+      "patient_ref": "P-N07",
+      "code": "CREA",
+      "value": "2.5",
+      "unit": "mg/dL",
+      "collected_at": "2024-03-28"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "NORTH-P-N07-MED",
+      "patient_ref": "P-N07",
+      "code": "MET",
+      "start_date": "2024-04-03",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "NORTH-P-N07-CONSENT",
+      "patient_ref": "P-N07",
+      "status": "Y",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "NORTH-P-N07-FU-1",
+      "patient_ref": "P-N07",
+      "visit_date": "2024-04-01",
+      "visit_type": "screening",
+      "response": "CR"
+    }
+  ]
+}

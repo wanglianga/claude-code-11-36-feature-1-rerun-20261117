@@ -1,0 +1,25 @@
+{
+  "center_code": "NORTH",
+  "batch_code": "north-2024-wk14-amend",
+  "records": [
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N07-LAB-CREATININE-1",
+      "patient_ref": "P-N07",
+      "code": "CREA",
+      "value": "1.1",
+      "unit": "mg/dL",
+      "collected_at_note": "corrected after lab review",
+      "collected_at": "2024-03-28"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N06-LAB-CREATININE-LATE",
+      "patient_ref": "P-N06",
+      "code": "CREA",
+      "value": "140",
+      "unit": "umol/L",
+      "collected_at": "2024-03-08"
+    }
+  ]
+}
