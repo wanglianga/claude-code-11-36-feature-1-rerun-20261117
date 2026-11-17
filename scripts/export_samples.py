@@ -27,9 +27,14 @@ def build() -> dict:
             code: fixtures.mappings_for(code) for code in fixtures.CENTER_SPECS
         },
         "protocol": {"version": "v1.0", "rules": fixtures.PROTOCOL_RULES},
+        "protocol_v1_1": {"version": "v1.1", "rules": fixtures.PROTOCOL_RULES_V1_1},
+        "protocol_v1_2": {"version": "v1.2", "rules": fixtures.PROTOCOL_RULES_V1_2},
         "uploads": {
             "batch1": fixtures.BATCH1_UPLOADS,
+            "batch1b": fixtures.BATCH1B_UPLOADS,
             "batch2": fixtures.BATCH2_UPLOADS,
+            "batch3": fixtures.BATCH3_UPLOADS,
+            "batch4": fixtures.BATCH4_UPLOADS,
         },
     }
 
@@ -46,6 +51,12 @@ def export() -> None:
     (OUT / "protocol-v1.0.json").write_text(
         json.dumps(data["protocol"], indent=2, ensure_ascii=False), encoding="utf-8"
     )
+    (OUT / "protocol-v1.1.json").write_text(
+        json.dumps(data["protocol_v1_1"], indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    (OUT / "protocol-v1.2.json").write_text(
+        json.dumps(data["protocol_v1_2"], indent=2, ensure_ascii=False), encoding="utf-8"
+    )
     for batch, uploads in data["uploads"].items():
         for upload in uploads:
             path = OUT / f"upload-{upload['batch_code']}.json"
@@ -58,8 +69,11 @@ def export() -> None:
         "文件：\n\n"
         "- `centers.json`：三个中心的显示名与日期格式配置\n"
         "- `mappings.json`：各中心本地编码到研究编码的映射\n"
-        "- `protocol-v1.0.json`：方案 v1.0 的入排与随访规则\n"
-        "- `upload-*.json`：各批次上传的原始行（含代表中心编码差异、单位边界、撤回与迟到病例）\n",
+        "- `protocol-v1.0.json`：方案 v1.0 的入排、终点与随访规则\n"
+        "- `protocol-v1.1.json`：方案 v1.1（原生条件树：阈值放宽/年龄收紧/索引日期迁移/新增 HBA1C）\n"
+        "- `protocol-v1.2.json`：方案 v1.2（扁平形式的两个参数微调）\n"
+        "- `upload-*.json`：各批次上传的原始行（含中心编码差异、单位边界、撤回、迟到病例、\n"
+        "  修订评估用的 wk11 新病例、wk15 补传与更正、wk16 评估后补传）\n",
         encoding="utf-8",
     )
     print(f"exported sample files to {OUT}")
@@ -69,10 +83,11 @@ def validate() -> None:
     data = build()
     assert len(data["centers"]) == 3
     assert all(len(v) for v in data["mappings"].values())
-    total = sum(len(u["records"]) for u in data["uploads"]["batch1"])
-    total += sum(len(u["records"]) for u in data["uploads"]["batch2"])
-    assert total > 90
-    print(f"sample data validated: {total} source rows across 3 centres and 2 batches")
+    total = 0
+    for uploads in data["uploads"].values():
+        total += sum(len(u["records"]) for u in uploads)
+    assert total > 140
+    print(f"sample data validated: {total} source rows across 3 centres and 5 batches")
 
 
 def main(argv=None) -> int:

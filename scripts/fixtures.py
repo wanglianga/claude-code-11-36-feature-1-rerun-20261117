@@ -77,6 +77,14 @@ PROTOCOL_RULES = {
         "diagnosis": {"codes": ["ADV"]},
         "lab": {"code": "HEMOGLOBIN", "max": 8.0, "window_days_before": 30},
     },
+    "endpoints": {
+        "primary_efficacy": {
+            "label": "主要疗效终点：索引后 60–200 天随访缓解",
+            "visit_types": ["follow_up"],
+            "window_days": [60, 200],
+            "required_response": ["CR", "PR"],
+        }
+    },
     "follow_up": {
         "visits": [
             {"day": 30, "kind": "safety"},
@@ -85,6 +93,112 @@ PROTOCOL_RULES = {
         ]
     },
     "safety": {"allow_retention_after_withdrawal": True},
+}
+
+
+# v1.1: native condition-tree revision. Relative to v1.0 it
+#   * loosens the creatinine ceiling 2.0 -> 2.2 mg/dL
+#   * tightens the age ceiling 75 -> 70
+#   * moves the index date from first visit to first T2DM diagnosis and widens
+#     the index-relative observation windows accordingly (age, lab windows and
+#     the follow-up anchor all shift with it)
+#   * adds a newly required HBA1C lab (old cutoffs have no HBA1C rows at all)
+#   * renames only the display label of the metformin condition (semantics
+#     unchanged — must not move any membership)
+PROTOCOL_RULES_V1_1 = {
+    "index_date": {
+        "basis": "first_diagnosis",
+        "merge_visit_types": ["screening", "baseline"],
+    },
+    "consent": {"required": True},
+    "criteria": {
+        "id": "criteria",
+        "all_of": [
+            {"id": "inclusion.age", "leaf": "age_range", "label": "年龄 18–70 岁", "min": 18, "max": 70},
+            {
+                "id": "inclusion.diagnosis",
+                "leaf": "diagnosis",
+                "label": "T2DM 诊断",
+                "codes": ["T2DM"],
+                "window_days": 3650,
+            },
+            {
+                "id": "inclusion.lab.CREATININE",
+                "leaf": "lab_range",
+                "label": "肌酐 0.4–2.2 mg/dL",
+                "code": "CREATININE",
+                "study_unit": "mg/dL",
+                "min": 0.4,
+                "max": 2.2,
+                "window_days_before": 30,
+                "window_days_after": 700,
+            },
+            {
+                "id": "inclusion.lab.HBA1C",
+                "leaf": "lab_range",
+                "label": "糖化血红蛋白 4.0–9.0%",
+                "code": "HBA1C",
+                "study_unit": "%",
+                "min": 4.0,
+                "max": 9.0,
+                "window_days_before": 30,
+                "window_days_after": 700,
+            },
+            {
+                "id": "inclusion.medication",
+                "leaf": "medication",
+                "label": "二甲双胍治疗（修订命名，语义不变）",
+                "codes": ["METFORMIN"],
+                "within_days_after_index": 700,
+            },
+            {
+                "id": "exclusion.diagnosis",
+                "label": "排除晚期疾病",
+                "not": {"leaf": "diagnosis_present", "codes": ["ADV"]},
+            },
+            {
+                "id": "exclusion.lab.HEMOGLOBIN",
+                "label": "排除血红蛋白 ≤ 8.0 g/dL",
+                "not": {
+                    "leaf": "lab_threshold",
+                    "code": "HEMOGLOBIN",
+                    "max": 8.0,
+                    "window_days_before": 30,
+                },
+            },
+        ],
+    },
+    "endpoints": {
+        "primary_efficacy": {
+            "label": "主要疗效终点：索引后 60–200 天随访缓解",
+            "visit_types": ["follow_up"],
+            "window_days": [60, 200],
+            "required_response": ["CR", "PR"],
+        }
+    },
+    "follow_up": {
+        "visits": [
+            {"day": 30, "kind": "safety"},
+            {"day": 90, "kind": "efficacy"},
+            {"day": 180, "kind": "efficacy"},
+        ]
+    },
+    "safety": {"allow_retention_after_withdrawal": True},
+}
+
+
+# v1.2: flat-form revision with only two parameter changes (creatinine ceiling
+# 2.0 -> 2.05, age ceiling 75 -> 70). Same skeleton as v1.0, so the evaluation
+# mixes changes per condition. On the wk15 cutoff this yields a
+# count-preserving member replacement: P-N09 (age 74) leaves, P-S06
+# (≈2.035 mg/dL) enters, while P-N08 (2.1 mg/dL) stays out at this threshold.
+PROTOCOL_RULES_V1_2 = {
+    **PROTOCOL_RULES,
+    "inclusion": {
+        **PROTOCOL_RULES["inclusion"],
+        "age_max": 70,
+        "lab": {**PROTOCOL_RULES["inclusion"]["lab"], "max": 2.05},
+    },
 }
 
 
@@ -377,6 +491,202 @@ BATCH1_UPLOADS = [
 BATCH2_UPLOADS = [
     {"center_code": "NORTH", "batch_code": "north-2024-wk14-amend", "records": north_amendment_upload()},
     {"center_code": "EAST", "batch_code": "east-2024-wk14-late", "records": east_late_upload()},
+]
+
+
+# ---------------------------------------------------------------------------
+# Revision-evaluation sample data (all fictional).
+#
+# wk11 extends the *old* cutoff with patients whose stories need specific
+# four-combination outcomes; wk15/wk16 extend the *new* cutoff.
+# ---------------------------------------------------------------------------
+def north_wk11_upload() -> list[dict]:
+    rows = []
+    # P-N08: no creatinine yet -> insufficient under every old-data combo.
+    rows += _n(
+        "NORTH", "P-N08", sex="F", birth=date(1985, 1, 1), first_visit=date(2024, 3, 12),
+        initials=("M", "N"), diagnosis="T2DM", diagnosis_date=date(2023, 10, 15),
+        medication="METFORMIN", medication_date=date(2024, 3, 14), consent="granted",
+        visits=[{"on": date(2024, 3, 12)}],
+    )
+    # P-N09: age 74 — included under v1.0 (<=75), excluded under v1.1 (>70).
+    rows += _n(
+        "NORTH", "P-N09", sex="M", birth=date(1949, 5, 10), first_visit=date(2024, 3, 8),
+        initials=("H", "K"), diagnosis="T2DM", diagnosis_date=date(2023, 9, 20),
+        labs=[{"code": "CREATININE", "value": "1.5", "unit": "mg/dL", "collected_on": date(2024, 3, 1)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 10), consent="granted",
+        visits=[{"on": date(2024, 3, 8)}],
+    )
+    # P-N10: age 74 AND creatinine 2.1 — the loosened lab threshold would admit
+    # him, the tightened age ceiling keeps him out (loosen/tighten offset).
+    rows += _n(
+        "NORTH", "P-N10", sex="M", birth=date(1949, 8, 10), first_visit=date(2024, 3, 11),
+        initials=("P", "Q"), diagnosis="T2DM", diagnosis_date=date(2023, 11, 10),
+        labs=[{"code": "CREATININE", "value": "2.1", "unit": "mg/dL", "collected_on": date(2024, 3, 5)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 13), consent="granted",
+        visits=[{"on": date(2024, 3, 11)}],
+    )
+    return rows
+
+
+def south_wk11_upload() -> list[dict]:
+    rows = []
+    # P-S06: creatinine 180 µmol/L ≈ 2.035 mg/dL — out under v1.0 (>2.0),
+    # in under v1.1 (<=2.2) and under v1.2 (<=2.05).
+    rows += _n(
+        "SOUTH", "P-S06", sex="F", birth=date(1975, 4, 4), first_visit=date(2024, 3, 6),
+        initials=("S", "T"), diagnosis="T2DM", diagnosis_date=date(2023, 8, 15),
+        labs=[{"code": "CREATININE", "value": "180", "unit": "µmol/L", "collected_on": date(2024, 3, 1)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 8), consent="granted",
+        visits=[{"on": date(2024, 3, 6)}],
+    )
+    # P-S07: fully eligible under v1.0, but no HBA1C exists for him anywhere —
+    # under v1.1 he stays pending (missing data), never auto-excluded.
+    rows += _n(
+        "SOUTH", "P-S07", sex="M", birth=date(1968, 2, 2), first_visit=date(2024, 3, 4),
+        initials=("U", "V"), diagnosis="T2DM", diagnosis_date=date(2023, 7, 20),
+        labs=[{"code": "CREATININE", "value": "95", "unit": "µmol/L", "collected_on": date(2024, 2, 28)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 6), consent="granted",
+        visits=[{"on": date(2024, 3, 4)}],
+    )
+    # P-S08 / P-S08B: same initials and birth date — a second identity
+    # candidate, adjudicated after the old cutoff is frozen.
+    rows += _n(
+        "SOUTH", "P-S08", sex="F", birth=date(1990, 6, 6), first_visit=date(2024, 3, 18),
+        initials=("J", "L"), diagnosis="T2DM", diagnosis_date=date(2023, 5, 1),
+        labs=[{"code": "CREATININE", "value": "100", "unit": "µmol/L", "collected_on": date(2024, 3, 14)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 19), consent="granted",
+        visits=[{"on": date(2024, 3, 18)}],
+    )
+    rows += _n(
+        "SOUTH", "P-S08B", sex="F", birth=date(1990, 6, 6), first_visit=date(2024, 3, 19),
+        initials=("J", "L"), diagnosis="T2DM", diagnosis_date=date(2023, 5, 1),
+        labs=[{"code": "CREATININE", "value": "102", "unit": "µmol/L", "collected_on": date(2024, 3, 15)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 20), consent="granted",
+        visits=[{"on": date(2024, 3, 19)}],
+    )
+    return rows
+
+
+def east_wk11_upload() -> list[dict]:
+    # P-E05: index-date migration case. Diagnosis 2024-02-20 vs first visit
+    # 2024-03-15 shifts age (64->63), the lab window position, the follow-up
+    # anchor and the endpoint window: the 2024-04-24 follow-up is +40d from the
+    # old index (outside 60–200d) but +64d from the new index (inside).
+    return _n(
+        "EAST", "P-E05", sex="F", birth=date(1960, 3, 10), first_visit=date(2024, 3, 15),
+        initials=("W", "Y"), diagnosis="T2DM", diagnosis_date=date(2024, 2, 20),
+        labs=[{"code": "CREATININE", "value": "1.3", "unit": "mg/dL", "collected_on": date(2024, 3, 10)}],
+        medication="METFORMIN", medication_date=date(2024, 3, 17), consent="granted",
+        visits=[
+            {"on": date(2024, 3, 15)},
+            {"on": date(2024, 4, 24), "type": "follow_up", "response": "PR"},
+        ],
+    )
+
+
+BATCH1B_UPLOADS = [
+    {"center_code": "NORTH", "batch_code": "north-2024-wk11", "records": north_wk11_upload()},
+    {"center_code": "SOUTH", "batch_code": "south-2024-wk11", "records": south_wk11_upload()},
+    {"center_code": "EAST", "batch_code": "east-2024-wk11", "records": east_wk11_upload()},
+]
+
+
+def _lab_row(center: str, ref: str, code: str, value: str, unit: str, collected: str, suffix: str) -> dict:
+    return {
+        "record_type": "lab",
+        "source_uid": f"{center}-{ref}-LAB-{code}-{suffix}",
+        "patient_ref": ref,
+        "code": code,
+        "value": value,
+        "unit": unit,
+        "collected_at": collected,
+    }
+
+
+def north_wk15_upload() -> list[dict]:
+    rows = [
+        # The missing creatinine for P-N08: 2.1 mg/dL needs the loosened v1.1
+        # threshold *and* this late upload together (joint effect).
+        _lab_row("NORTH", "P-N08", "CREA", "2.1", "mg/dL", "2024-03-10", "LATE"),
+    ]
+    # HBA1C backfill required by v1.1 for the NORTH patients in the cohort.
+    for ref, collected, value in [
+        ("P-N01", "2024-01-25", "6.1"),
+        ("P-N02", "2024-02-05", "6.4"),
+        ("P-N04", "2024-02-28", "6.0"),
+        ("P-N06", "2024-03-08", "6.5"),
+        ("P-N07", "2024-03-28", "6.2"),
+        ("P-N08", "2024-03-10", "6.3"),
+    ]:
+        rows.append(_lab_row("NORTH", ref, "A1C", value, "%", collected, "1"))
+    return rows
+
+
+def south_wk15_upload() -> list[dict]:
+    rows = [
+        # Correction for P-S01's creatinine: 200 -> 170 µmol/L (≈1.92 mg/dL).
+        # Same source_uid as the original row = a new revision superseding the
+        # out-of-range value (the old revision stays in the audit trail).
+        {
+            "record_type": "lab",
+            "source_uid": "SOUTH-P-S01-LAB-CREATININE-1",
+            "patient_ref": "P-S01",
+            "code": "KREA",
+            "value": "170",
+            "unit": "µmol/L",
+            "collected_at": "26/02/2024",
+            "collected_at_note": "corrected after lab review",
+        },
+    ]
+    for ref, collected, value in [
+        ("P-S01", "26/02/2024", "5.7"),
+        ("P-S02", "02/03/2024", "5.9"),
+        ("P-S03", "06/03/2024", "6.1"),
+        ("P-S03B", "08/03/2024", "6.3"),
+        ("P-S06", "01/03/2024", "5.8"),
+        ("P-S08", "18/03/2024", "6.0"),
+        ("P-S08B", "19/03/2024", "6.2"),
+    ]:
+        rows.append(_lab_row("SOUTH", ref, "A1C", value, "%", collected, "1"))
+    return rows
+
+
+def east_wk15_upload() -> list[dict]:
+    rows = [
+        _lab_row("EAST", "P-E02", "A1C", "6.0", "%", "15.03.2024", "1"),
+        _lab_row("EAST", "P-E05", "A1C", "6.2", "%", "10.03.2024", "1"),
+    ]
+    # P-E06: a brand-new subject who is fully eligible under both revisions —
+    # a pure data-only entrant (no protocol effect involved).
+    rows += _n(
+        "EAST", "P-E06", sex="M", birth=date(1979, 8, 8), first_visit=date(2024, 4, 10),
+        initials=("J", "K"), diagnosis="T2DM", diagnosis_date=date(2023, 12, 1),
+        labs=[
+            {"code": "CREATININE", "value": "1.0", "unit": "mg/dL", "collected_on": date(2024, 4, 5)},
+            {"code": "HBA1C", "value": "6.1", "unit": "%", "collected_on": date(2024, 4, 5)},
+        ],
+        medication="METFORMIN", medication_date=date(2024, 4, 12), consent="granted",
+        visits=[{"on": date(2024, 4, 10)}],
+    )
+    return rows
+
+
+BATCH3_UPLOADS = [
+    {"center_code": "NORTH", "batch_code": "north-2024-wk15", "records": north_wk15_upload()},
+    {"center_code": "SOUTH", "batch_code": "south-2024-wk15", "records": south_wk15_upload()},
+    {"center_code": "EAST", "batch_code": "east-2024-wk15", "records": east_wk15_upload()},
+]
+
+
+def east_wk16_upload() -> list[dict]:
+    # Arrives *after* the first evaluation: makes its diff list stale and
+    # forces a re-evaluation (P-E04's HBA1C flips her under v1.1).
+    return [_lab_row("EAST", "P-E04", "A1C", "6.4", "%", "28.04.2024", "1")]
+
+
+BATCH4_UPLOADS = [
+    {"center_code": "EAST", "batch_code": "east-2024-wk16", "records": east_wk16_upload()},
 ]
 
 

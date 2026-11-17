@@ -47,6 +47,22 @@
         "window_days_before": 30
       }
     },
+    "endpoints": {
+      "primary_efficacy": {
+        "label": "主要疗效终点：索引后 60–200 天随访缓解",
+        "visit_types": [
+          "follow_up"
+        ],
+        "window_days": [
+          60,
+          200
+        ],
+        "required_response": [
+          "CR",
+          "PR"
+        ]
+      }
+    },
     "follow_up": {
       "visits": [
         {

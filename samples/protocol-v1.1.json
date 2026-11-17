@@ -1,0 +1,122 @@
+{
+  "version": "v1.1",
+  "rules": {
+    "index_date": {
+      "basis": "first_diagnosis",
+      "merge_visit_types": [
+        "screening",
+        "baseline"
+      ]
+    },
+    "consent": {
+      "required": true
+    },
+    "criteria": {
+      "id": "criteria",
+      "all_of": [
+        {
+          "id": "inclusion.age",
+          "leaf": "age_range",
+          "label": "年龄 18–70 岁",
+          "min": 18,
+          "max": 70
+        },
+        {
+          "id": "inclusion.diagnosis",
+          "leaf": "diagnosis",
+          "label": "T2DM 诊断",
+          "codes": [
+            "T2DM"
+          ],
+          "window_days": 3650
+        },
+        {
+          "id": "inclusion.lab.CREATININE",
+          "leaf": "lab_range",
+          "label": "肌酐 0.4–2.2 mg/dL",
+          "code": "CREATININE",
+          "study_unit": "mg/dL",
+          "min": 0.4,
+          "max": 2.2,
+          "window_days_before": 30,
+          "window_days_after": 700
+        },
+        {
+          "id": "inclusion.lab.HBA1C",
+          "leaf": "lab_range",
+          "label": "糖化血红蛋白 4.0–9.0%",
+          "code": "HBA1C",
+          "study_unit": "%",
+          "min": 4.0,
+          "max": 9.0,
+          "window_days_before": 30,
+          "window_days_after": 700
+        },
+        {
+          "id": "inclusion.medication",
+          "leaf": "medication",
+          "label": "二甲双胍治疗（修订命名，语义不变）",
+          "codes": [
+            "METFORMIN"
+          ],
+          "within_days_after_index": 700
+        },
+        {
+          "id": "exclusion.diagnosis",
+          "label": "排除晚期疾病",
+          "not": {
+            "leaf": "diagnosis_present",
+            "codes": [
+              "ADV"
+            ]
+          }
+        },
+        {
+          "id": "exclusion.lab.HEMOGLOBIN",
+          "label": "排除血红蛋白 ≤ 8.0 g/dL",
+          "not": {
+            "leaf": "lab_threshold",
+            "code": "HEMOGLOBIN",
+            "max": 8.0,
+            "window_days_before": 30
+          }
+        }
+      ]
+    },
+    "endpoints": {
+      "primary_efficacy": {
+        "label": "主要疗效终点：索引后 60–200 天随访缓解",
+        "visit_types": [
+          "follow_up"
+        ],
+        "window_days": [
+          60,
+          200
+        ],
+        "required_response": [
+          "CR",
+          "PR"
+        ]
+      }
+    },
+    "follow_up": {
+      "visits": [
+        {
+          "day": 30,
+          "kind": "safety"
+        },
+        {
+          "day": 90,
+          "kind": "efficacy"
+        },
+        {
+          "day": 180,
+          "kind": "efficacy"
+        }
+      ]
+    },
+    "safety": {
+      "allow_retention_after_withdrawal": true
+    }
+  }
+}

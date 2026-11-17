@@ -1,0 +1,85 @@
+{
+  "center_code": "EAST",
+  "batch_code": "east-2024-wk15",
+  "records": [
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E02-LAB-A1C-1",
+      "patient_ref": "P-E02",
+      "code": "A1C",
+      "value": "6.0",
+      "unit": "%",
+      "collected_at": "15.03.2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E05-LAB-A1C-1",
+      "patient_ref": "P-E05",
+      "code": "A1C",
+      "value": "6.2",
+      "unit": "%",
+      "collected_at": "10.03.2024"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "EAST-P-E06-CASE",
+      "patient_ref": "P-E06",
+      "family_initial": "J",
+      "given_initial": "K",
+      "sex": "男",
+      "birth_date": "08.08.1979",
+      "first_visit_date": "10.04.2024",
+      "enrollment_date": "10.04.2024",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "EAST-P-E06-DX",
+      "patient_ref": "P-E06",
+      "code": "T2DM",
+      "diagnosis_date": "01.12.2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E06-LAB-CREATININE-1",
+      "patient_ref": "P-E06",
+      "code": "SCR",
+      "value": "1.0",
+      "unit": "mg/dL",
+      "collected_at": "05.04.2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E06-LAB-HBA1C-2",
+      "patient_ref": "P-E06",
+      "code": "A1C",
+      "value": "6.1",
+      "unit": "%",
+      "collected_at": "05.04.2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "EAST-P-E06-MED",
+      "patient_ref": "P-E06",
+      "code": "BIG",
+      "start_date": "12.04.2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "EAST-P-E06-CONSENT",
+      "patient_ref": "P-E06",
+      "status": "同意",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "EAST-P-E06-FU-1",
+      "patient_ref": "P-E06",
+      "visit_date": "10.04.2024",
+      "visit_type": "screening",
+      "response": "good"
+    }
+  ]
+}

@@ -204,6 +204,15 @@ def create_revision(
         )
     ):
         raise HTTPException(409, "revision version already exists")
+    if body.rules.get("criteria") is not None:
+        # Native condition trees must be structurally valid before they can be
+        # approved or evaluated; the flat inclusion/exclusion form is untouched.
+        from ..services.conditions import ConditionTreeError, validate_tree
+
+        try:
+            validate_tree(body.rules["criteria"])
+        except ConditionTreeError as exc:
+            raise HTTPException(422, f"invalid criteria tree: {exc}")
     revision = ProtocolRevision(
         protocol_id=protocol_id,
         version=body.version,

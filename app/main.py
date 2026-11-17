@@ -15,7 +15,7 @@ from sqlalchemy.orm import Session
 
 from .db import Base, SessionLocal, engine, get_db
 from .models import User
-from .routers import cohort, privacy, runs, setup, uploads
+from .routers import cohort, privacy, revisions, runs, setup, uploads
 from .security import DEMO_USERS, get_current_user, seed_users
 
 logging.basicConfig(level=logging.INFO)
@@ -52,6 +52,7 @@ app.include_router(uploads.router)
 app.include_router(runs.router)
 app.include_router(cohort.router)
 app.include_router(privacy.router)
+app.include_router(revisions.router)
 
 
 @app.get("/health")

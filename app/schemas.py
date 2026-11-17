@@ -73,3 +73,22 @@ class ReportIn(BaseModel):
 class ConsentWithdrawalIn(BaseModel):
     allow_retention: bool = False
     withdrawal_date: str | None = None
+
+
+class RevisionEvaluationIn(BaseModel):
+    old_revision_id: int
+    new_revision_id: int
+    old_cutoff_id: int
+    new_cutoff_id: int
+    # Budget of mixed evaluations per case when searching minimal sufficient
+    # change sets. Exhaustion keeps proven sets and marks the case partial.
+    budget_per_case: int = Field(default=32, ge=1, le=256)
+
+
+class RevisionCompareIn(BaseModel):
+    old_revision_id: int
+    new_revision_id: int
+
+
+class DossierIn(BaseModel):
+    note: str | None = None

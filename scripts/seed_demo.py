@@ -142,6 +142,51 @@ def seed(api: Api) -> dict:
     }
 
 
+def _print_evaluation(api: "Api", ev: dict) -> None:
+    """Print the four-combination table and the key attributed cases."""
+    combos = ev["combos"]
+    labels = ev["combo_labels"]
+    print("\n四种组合的病例结局分布（实际运行，不借用其他组合的资料）")
+    print(f"{'组合':28}{'纳入':>5}{'缺资料':>7}{'待判':>6}{'不符合':>7}{'撤回':>6}{'不在范围':>8}")
+    for key in ("old_old", "new_old", "old_new", "new_new"):
+        c = combos[key]
+        print(
+            f"{labels[key]:28}{c['included']:>5}{c['insufficient_data']:>7}"
+            f"{c['pending_adjudication']:>6}{c['excluded_ineligible']:>7}"
+            f"{c['consent_withdrawn']:>6}{c['not_in_scope']:>8}"
+        )
+    s = ev["summary"]
+    mem = s["membership"]
+    print(
+        f"\n纳入人数 {mem['count_old']} → {mem['count_new']}（净 {mem['net_change']:+d}）；"
+        f"进入 {len(mem['entered'])}，离开 {len(mem['left'])}"
+    )
+    print("归因分类：" + "，".join(f"{k}={v}" for k, v in sorted(s["categories"].items())))
+    print(f"最小充分组合搜索：{ev['msc_stats']} ")
+
+    cases = api.get(f"/revision-evaluations/{ev['id']}/cases")
+    interesting = [c for c in cases if c["category"] != "unchanged" or c["reason_changed"]]
+    print(f"\n状态变化或理由变化的病例（{len(interesting)} 例，按中心）：")
+    for c in interesting:
+        o = c["outcomes"]
+        print(
+            f"  {c['study_id']}（{c['center_code']:5}）{c['category_label']}\n"
+            f"      旧旧={o['old_old']} 新旧={o['new_old']} 旧新={o['old_new']} 新新={o['new_new']}"
+            + (f"\n      最小充分组合={c['msc']['sets']}（{c['msc']['status']}）" if c["msc"].get("sets") else "")
+            + ("\n      条件交互：多条条件同向/反向翻转" if c["condition_interaction"] else "")
+        )
+    detail = api.get(f"/revision-evaluations/{ev['id']}")
+    dr = detail["data_revisions"]
+    print(
+        f"\n数据修订单列（不计入方案影响）：补传 {len(dr['uploads'])} 批、"
+        f"映射 {len(dr['mappings'])} 条、身份裁决 {len(dr['identity'])} 条"
+    )
+    ep = detail.get("impact") or api.get(f"/revision-evaluations/{ev['id']}/impact")["impact"]
+    if ep["endpoints"]["changed"]:
+        for ch in ep["endpoints"]["changed"]:
+            print(f"  终点变化：{ch['study_id']} {ch['endpoint']}：{ch['old']} → {ch['new']}")
+
+
 def _print_reconciliation(run_detail: dict) -> None:
     print("\n每中心对账（分析负责人签核前必须全部 balanced=true）")
     header = (
@@ -224,11 +269,17 @@ def main(argv: list[str] | None = None) -> int:
         analysis1 = api.post(
             f"/snapshots/{snap1['id']}/analysis-runs", "server", json={"kind": "efficacy"}
         )
+        # A safety analysis on the same snapshot: its retained-withdrawal
+        # population is untouched by the later amendment, which is what keeps
+        # it "reusable" in the migration dossier.
+        analysis1s = api.post(
+            f"/snapshots/{snap1['id']}/analysis-runs", "server", json={"kind": "safety"}
+        )
         report1 = api.post("/reports", "server", json={"analysis_run_id": analysis1["id"]})
         print(
             f"快照 #{snap1['id']} 病例 {snap1['case_count']}，安全分析 {snap1['safety_count']}；"
-            f"随访计划 #{plan1['id']}；报告 v{report1['report_version']}，"
-            f"校验和 {report1['content_hash'][:12]}…"
+            f"随访计划 #{plan1['id']}；疗效分析 #{analysis1['id']}、安全分析 #{analysis1s['id']}；"
+            f"报告 v{report1['report_version']}，校验和 {report1['content_hash'][:12]}…"
         )
 
         print("\n== 4. 迟到补录（中心补传 + 结果更正） ==")
@@ -286,6 +337,209 @@ def main(argv: list[str] | None = None) -> int:
             f"内容校验和未变：{old['content_hash'] == report1['content_hash']}"
         )
 
+        print("\n== 7. 方案修订的差异归因与分析迁移评估 ==")
+        from scripts import fixtures as fx
+
+        print("\n-- 7.1 中心补传（wk11 新病例）→ 新截止批次；映射补建与身份裁决单列 --")
+        up1b = {}
+        for upload in fx.BATCH1B_UPLOADS:
+            who = {"NORTH": "north", "SOUTH": "south", "EAST": "east"}[upload["center_code"]]
+            up1b[upload["batch_code"]] = api.post("/uploads", who, json=upload)["id"]
+        cutoff3 = api.post(
+            "/cutoffs",
+            "server",
+            json={
+                "label": "cutoff-2024-04-08",
+                "upload_ids": sorted(
+                    list(uploads.values()) + list(late.values()) + list(up1b.values())
+                ),
+            },
+        )
+        # 映射补建（SOUTH M-99）与新身份候选裁决发生在旧截止冻结之后，评估会把
+        # 它们列为独立的数据修订，而不是方案影响。
+        m = api.post(
+            "/mappings",
+            "reviewer",
+            json={
+                "center_code": "SOUTH",
+                "kind": "medication",
+                "source_code": "M-99",
+                "study_code": "METFORMIN",
+            },
+        )
+        reapply = api.post(f"/mappings/{m['id']}/reapply?dry_run=false", "reviewer")
+        cands = api.get("/identity-candidates", "privacy")
+        for cand in cands:
+            api.post(
+                f"/identity-candidates/{cand['id']}/decide",
+                "privacy",
+                json={"status": "rejected", "note": "demo: distinct patients"},
+            )
+        print(
+            f"映射补建 M-99→METFORMIN：修复 {reapply['fixed_rows']} 行；"
+            f"新身份候选 {len(cands)} 条已由隐私管理员裁决"
+        )
+        run3 = api.post(
+            "/screening-runs",
+            "server",
+            json={
+                "protocol_revision_id": rev,
+                "cutoff_batch_id": cutoff3["id"],
+                "strategy": "full",
+            },
+        )
+        snap3 = api.post(f"/screening-runs/{run3['id']}/snapshots", "server")
+        api.post(f"/snapshots/{snap3['id']}/lock", "server")
+        analysis3 = api.post(
+            f"/snapshots/{snap3['id']}/analysis-runs", "server", json={"kind": "efficacy"}
+        )
+        print(f"快照 #{snap3['id']}（cutoff-2024-04-08）病例 {snap3['case_count']}，已锁定并做疗效分析 #{analysis3['id']}")
+
+        print("\n-- 7.2 wk15 补传（N08 肌酐 + HBA1C 回补 + S01 更正 + 新病例 E06）→ 新截止批次 --")
+        up3 = {}
+        for upload in fx.BATCH3_UPLOADS:
+            who = {"NORTH": "north", "SOUTH": "south", "EAST": "east"}[upload["center_code"]]
+            up3[upload["batch_code"]] = api.post("/uploads", who, json=upload)["id"]
+        cutoff4 = api.post(
+            "/cutoffs",
+            "server",
+            json={
+                "label": "cutoff-2024-04-22",
+                "upload_ids": sorted(
+                    list(uploads.values())
+                    + list(late.values())
+                    + list(up1b.values())
+                    + list(up3.values())
+                ),
+            },
+        )
+        rev11 = api.post(
+            f"/protocols/{parts['protocol_id']}/revisions",
+            "reviewer",
+            json={"version": "v1.1", "rules": fx.PROTOCOL_RULES_V1_1},
+        )
+        api.post(f"/protocols/revisions/{rev11['id']}/approve", "reviewer")
+        rev12 = api.post(
+            f"/protocols/{parts['protocol_id']}/revisions",
+            "reviewer",
+            json={"version": "v1.2", "rules": fx.PROTOCOL_RULES_V1_2},
+        )
+        api.post(f"/protocols/revisions/{rev12['id']}/approve", "reviewer")
+        print(
+            "v1.1（原生条件树：肌酐放宽 2.0→2.2、年龄收紧 75→70、索引日期改为首次诊断、"
+            "新增 HBA1C 必需条件、部分条件仅改名）与 v1.2（扁平参数微调）已批准"
+        )
+
+        print("\n-- 7.3 评估一：v1.0→v1.1 × cutoff-04-08→cutoff-04-22，四种组合实际运行 --")
+        ev1 = api.post(
+            "/revision-evaluations",
+            "server",
+            json={
+                "old_revision_id": rev,
+                "new_revision_id": rev11["id"],
+                "old_cutoff_id": cutoff3["id"],
+                "new_cutoff_id": cutoff4["id"],
+            },
+        )
+        _print_evaluation(api, ev1)
+
+        print("\n-- 7.4 评估二：v1.0→v1.2 × 同一截止批次（人数不变的成员替换） --")
+        ev2 = api.post(
+            "/revision-evaluations",
+            "server",
+            json={
+                "old_revision_id": rev,
+                "new_revision_id": rev12["id"],
+                "old_cutoff_id": cutoff4["id"],
+                "new_cutoff_id": cutoff4["id"],
+            },
+        )
+        mem2 = ev2["summary"]["membership"]
+        print(
+            f"纳入人数 {mem2['count_old']} → {mem2['count_new']}（净变化 {mem2['net_change']}），"
+            f"但成员被替换：进入 {mem2['entered']}，离开 {mem2['left']}"
+        )
+        ev2_cases = api.get(f"/revision-evaluations/{ev2['id']}/cases")
+        for c in ev2_cases:
+            if c["category"] != "unchanged" or c["reason_changed"]:
+                print(
+                    f"  {c['study_id']}（{c['center_code']}）{c['category_label']}："
+                    f"{c['outcomes']['old_old']} → {c['outcomes']['new_new']}，"
+                    f"最小充分组合 {c['msc'].get('sets')}"
+                )
+
+        print("\n-- 7.5 评估后中心再次补传 → 迁移案卷拒绝沿用旧差异清单，必须重评 --")
+        up4 = {}
+        for upload in fx.BATCH4_UPLOADS:
+            who = {"NORTH": "north", "SOUTH": "south", "EAST": "east"}[upload["center_code"]]
+            up4[upload["batch_code"]] = api.post("/uploads", who, json=upload)["id"]
+        stale = api.client.post(
+            f"/revision-evaluations/{ev1['id']}/migration-dossiers",
+            headers=api.as_("server"),
+            json={"note": "v1.1 迁移"},
+        )
+        print(f"基于评估一提交案卷：HTTP {stale.status_code}（评估已失效）")
+        if stale.status_code == 409:
+            for reason in stale.json()["detail"]["reasons"]:
+                print(f"  失效原因：{reason}")
+        cutoff5 = api.post(
+            "/cutoffs",
+            "server",
+            json={
+                "label": "cutoff-2024-04-29",
+                "upload_ids": sorted(
+                    list(uploads.values())
+                    + list(late.values())
+                    + list(up1b.values())
+                    + list(up3.values())
+                    + list(up4.values())
+                ),
+            },
+        )
+        ev3 = api.post(
+            "/revision-evaluations",
+            "server",
+            json={
+                "old_revision_id": rev,
+                "new_revision_id": rev11["id"],
+                "old_cutoff_id": cutoff3["id"],
+                "new_cutoff_id": cutoff5["id"],
+            },
+        )
+        ev3_cases = api.get(f"/revision-evaluations/{ev3['id']}/cases")
+        e04 = [
+            c
+            for c in ev3_cases
+            if c["center_code"] == "EAST" and c["category"] == "joint"
+        ]
+        for c in e04:
+            print(
+                f"重评捕获新补传影响：{c['study_id']}（EAST）"
+                f"{c['outcomes']['old_old']} → {c['outcomes']['new_new']}，"
+                f"最小充分组合 {c['msc'].get('sets')}"
+            )
+        dossier = api.post(
+            f"/revision-evaluations/{ev3['id']}/migration-dossiers",
+            "server",
+            json={"note": "v1.1 迁移案卷（基于重评）"},
+        )
+        print(f"基于重评（评估 #{ev3['id']}）的迁移案卷 #{dossier['id']} 已生成")
+
+        print("\n-- 7.6 影响目录：哪些分析可继续引用旧队列，哪些需研究者重新确认 --")
+        for a in dossier["analyses"]:
+            print(
+                f"  分析 #{a['analysis_run_id']}（{a['kind']}，快照 #{a['snapshot_id']}）："
+                f"{'可继续引用旧队列' if a['disposition'] == 'reusable' else '需研究者重新确认'}"
+                f"（{a['note']}）"
+            )
+        api.post(f"/migration-dossiers/{dossier['id']}/acknowledge", "server")
+        old1 = api.get(f"/reports/{report1['id']}")
+        old2 = api.get(f"/reports/{report2['id']}")
+        print(
+            f"旧报告内容校验和未变：v1={old1['content_hash'] == report1['content_hash']}，"
+            f"v2={old2['content_hash'] == report2['content_hash']}；案卷不重写报告、不重新批准方案"
+        )
+
         summary = {
             "rev": rev,
             "cutoff1": cutoff1["id"],
@@ -297,6 +551,14 @@ def main(argv: list[str] | None = None) -> int:
             "equivalence_equal": verify["equal"],
             "snapshot2": snap2["id"],
             "report2": report2["id"],
+            "cutoff3": cutoff3["id"],
+            "snapshot3": snap3["id"],
+            "revision_v1_1": rev11["id"],
+            "revision_v1_2": rev12["id"],
+            "evaluation_v10_v11": ev1["id"],
+            "evaluation_v10_v12": ev2["id"],
+            "evaluation_rerun": ev3["id"],
+            "dossier": dossier["id"],
         }
         print("\n== 结果摘要 ==")
         print(json.dumps(summary, indent=2, ensure_ascii=False))

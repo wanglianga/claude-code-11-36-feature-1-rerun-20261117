@@ -2008,6 +2008,707 @@
         }
       }
     },
+    "/revision-evaluations": {
+      "post": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Create Evaluation",
+        "operationId": "create_evaluation_revision_evaluations_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionEvaluationIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "List Evaluations",
+        "operationId": "list_evaluations_revision_evaluations_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Get Evaluation",
+        "operationId": "get_evaluation_revision_evaluations__evaluation_id__get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}/conditions": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Evaluation Conditions",
+        "operationId": "evaluation_conditions_revision_evaluations__evaluation_id__conditions_get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}/cases": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Evaluation Cases",
+        "operationId": "evaluation_cases_revision_evaluations__evaluation_id__cases_get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          },
+          {
+            "name": "only_changed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Only Changed"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}/cases/{study_id}": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Evaluation Case Detail",
+        "operationId": "evaluation_case_detail_revision_evaluations__evaluation_id__cases__study_id__get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "study_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Study Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}/impact": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Evaluation Impact",
+        "operationId": "evaluation_impact_revision_evaluations__evaluation_id__impact_get",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/revision-evaluations/{evaluation_id}/migration-dossiers": {
+      "post": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Make Dossier",
+        "operationId": "make_dossier_revision_evaluations__evaluation_id__migration_dossiers_post",
+        "parameters": [
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Evaluation Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DossierIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/migration-dossiers": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "List Dossiers",
+        "operationId": "list_dossiers_migration_dossiers_get",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/migration-dossiers/{dossier_id}": {
+      "get": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Get Dossier",
+        "operationId": "get_dossier_migration_dossiers__dossier_id__get",
+        "parameters": [
+          {
+            "name": "dossier_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Dossier Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/migration-dossiers/{dossier_id}/acknowledge": {
+      "post": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Acknowledge Dossier",
+        "description": "Record that the research lead reviewed the dossier. This never\nre-approves the protocol and never edits a report.",
+        "operationId": "acknowledge_dossier_migration_dossiers__dossier_id__acknowledge_post",
+        "parameters": [
+          {
+            "name": "dossier_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Dossier Id"
+            }
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/protocols/revisions/compare": {
+      "post": {
+        "tags": [
+          "revision-evaluation"
+        ],
+        "summary": "Compare Revisions",
+        "description": "Semantic condition diff between two revisions.\n\nNodes are compared by stable condition id and semantic content, so two\npeople editing the same tree concurrently get a node-level alignment —\nnever a splice of two individually legal fragments into a third meaning.",
+        "operationId": "compare_revisions_protocols_revisions_compare_post",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionCompareIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/health": {
       "get": {
         "summary": "Health",
@@ -2225,6 +2926,23 @@
         ],
         "title": "CutoffIn"
       },
+      "DossierIn": {
+        "properties": {
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "title": "DossierIn"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2352,6 +3070,59 @@
           "analysis_run_id"
         ],
         "title": "ReportIn"
+      },
+      "RevisionCompareIn": {
+        "properties": {
+          "old_revision_id": {
+            "type": "integer",
+            "title": "Old Revision Id"
+          },
+          "new_revision_id": {
+            "type": "integer",
+            "title": "New Revision Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_revision_id",
+          "new_revision_id"
+        ],
+        "title": "RevisionCompareIn"
+      },
+      "RevisionEvaluationIn": {
+        "properties": {
+          "old_revision_id": {
+            "type": "integer",
+            "title": "Old Revision Id"
+          },
+          "new_revision_id": {
+            "type": "integer",
+            "title": "New Revision Id"
+          },
+          "old_cutoff_id": {
+            "type": "integer",
+            "title": "Old Cutoff Id"
+          },
+          "new_cutoff_id": {
+            "type": "integer",
+            "title": "New Cutoff Id"
+          },
+          "budget_per_case": {
+            "type": "integer",
+            "maximum": 256.0,
+            "minimum": 1.0,
+            "title": "Budget Per Case",
+            "default": 32
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_revision_id",
+          "new_revision_id",
+          "old_cutoff_id",
+          "new_cutoff_id"
+        ],
+        "title": "RevisionEvaluationIn"
       },
       "RevisionIn": {
         "properties": {

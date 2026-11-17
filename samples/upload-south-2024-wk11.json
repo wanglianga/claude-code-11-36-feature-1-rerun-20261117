@@ -1,0 +1,214 @@
+{
+  "center_code": "SOUTH",
+  "batch_code": "south-2024-wk11",
+  "records": [
+    {
+      "record_type": "case",
+      "source_uid": "SOUTH-P-S06-CASE",
+      "patient_ref": "P-S06",
+      "family_initial": "S",
+      "given_initial": "T",
+      "sex": "2",
+      "birth_date": "04/04/1975",
+      "first_visit_date": "06/03/2024",
+      "enrollment_date": "06/03/2024",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "SOUTH-P-S06-DX",
+      "patient_ref": "P-S06",
+      "code": "E11",
+      "diagnosis_date": "15/08/2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S06-LAB-CREATININE-1",
+      "patient_ref": "P-S06",
+      "code": "KREA",
+      "value": "180",
+      "unit": "µmol/L",
+      "collected_at": "01/03/2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "SOUTH-P-S06-MED",
+      "patient_ref": "P-S06",
+      "code": "M-01",
+      "start_date": "08/03/2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "SOUTH-P-S06-CONSENT",
+      "patient_ref": "P-S06",
+      "status": "granted",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "SOUTH-P-S06-FU-1",
+      "patient_ref": "P-S06",
+      "visit_date": "06/03/2024",
+      "visit_type": "screening",
+      "response": "1"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "SOUTH-P-S07-CASE",
+      "patient_ref": "P-S07",
+      "family_initial": "U",
+      "given_initial": "V",
+      "sex": "1",
+      "birth_date": "02/02/1968",
+      "first_visit_date": "04/03/2024",
+      "enrollment_date": "04/03/2024",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "SOUTH-P-S07-DX",
+      "patient_ref": "P-S07",
+      "code": "E11",
+      "diagnosis_date": "20/07/2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S07-LAB-CREATININE-1",
+      "patient_ref": "P-S07",
+      "code": "KREA",
+      "value": "95",
+      "unit": "µmol/L",
+      "collected_at": "28/02/2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "SOUTH-P-S07-MED",
+      "patient_ref": "P-S07",
+      "code": "M-01",
+      "start_date": "06/03/2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "SOUTH-P-S07-CONSENT",
+      "patient_ref": "P-S07",
+      "status": "granted",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "SOUTH-P-S07-FU-1",
+      "patient_ref": "P-S07",
+      "visit_date": "04/03/2024",
+      "visit_type": "screening",
+      "response": "1"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "SOUTH-P-S08-CASE",
+      "patient_ref": "P-S08",
+      "family_initial": "J",
+      "given_initial": "L",
+      "sex": "2",
+      "birth_date": "06/06/1990",
+      "first_visit_date": "18/03/2024",
+      "enrollment_date": "18/03/2024",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "SOUTH-P-S08-DX",
+      "patient_ref": "P-S08",
+      "code": "E11",
+      "diagnosis_date": "01/05/2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S08-LAB-CREATININE-1",
+      "patient_ref": "P-S08",
+      "code": "KREA",
+      "value": "100",
+      "unit": "µmol/L",
+      "collected_at": "14/03/2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "SOUTH-P-S08-MED",
+      "patient_ref": "P-S08",
+      "code": "M-01",
+      "start_date": "19/03/2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "SOUTH-P-S08-CONSENT",
+      "patient_ref": "P-S08",
+      "status": "granted",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "SOUTH-P-S08-FU-1",
+      "patient_ref": "P-S08",
+      "visit_date": "18/03/2024",
+      "visit_type": "screening",
+      "response": "1"
+    },
+    {
+      "record_type": "case",
+      "source_uid": "SOUTH-P-S08B-CASE",
+      "patient_ref": "P-S08B",
+      "family_initial": "J",
+      "given_initial": "L",
+      "sex": "2",
+      "birth_date": "06/06/1990",
+      "first_visit_date": "19/03/2024",
+      "enrollment_date": "19/03/2024",
+      "treatment_code": "STD"
+    },
+    {
+      "record_type": "diagnosis",
+      "source_uid": "SOUTH-P-S08B-DX",
+      "patient_ref": "P-S08B",
+      "code": "E11",
+      "diagnosis_date": "01/05/2023"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S08B-LAB-CREATININE-1",
+      "patient_ref": "P-S08B",
+      "code": "KREA",
+      "value": "102",
+      "unit": "µmol/L",
+      "collected_at": "15/03/2024"
+    },
+    {
+      "record_type": "medication",
+      "source_uid": "SOUTH-P-S08B-MED",
+      "patient_ref": "P-S08B",
+      "code": "M-01",
+      "start_date": "20/03/2024",
+      "dose": "500 mg",
+      "dose_unit": "mg"
+    },
+    {
+      "record_type": "consent",
+      "source_uid": "SOUTH-P-S08B-CONSENT",
+      "patient_ref": "P-S08B",
+      "status": "granted",
+      "allow_retention": false
+    },
+    {
+      "record_type": "followup",
+      "source_uid": "SOUTH-P-S08B-FU-1",
+      "patient_ref": "P-S08B",
+      "visit_date": "19/03/2024",
+      "visit_type": "screening",
+      "response": "1"
+    }
+  ]
+}

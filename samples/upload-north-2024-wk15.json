@@ -1,0 +1,69 @@
+{
+  "center_code": "NORTH",
+  "batch_code": "north-2024-wk15",
+  "records": [
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N08-LAB-CREA-LATE",
+      "patient_ref": "P-N08",
+      "code": "CREA",
+      "value": "2.1",
+      "unit": "mg/dL",
+      "collected_at": "2024-03-10"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N01-LAB-A1C-1",
+      "patient_ref": "P-N01",
+      "code": "A1C",
+      "value": "6.1",
+      "unit": "%",
+      "collected_at": "2024-01-25"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N02-LAB-A1C-1",
+      "patient_ref": "P-N02",
+      "code": "A1C",
+      "value": "6.4",
+      "unit": "%",
+      "collected_at": "2024-02-05"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N04-LAB-A1C-1",
+      "patient_ref": "P-N04",
+      "code": "A1C",
+      "value": "6.0",
+      "unit": "%",
+      "collected_at": "2024-02-28"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N06-LAB-A1C-1",
+      "patient_ref": "P-N06",
+      "code": "A1C",
+      "value": "6.5",
+      "unit": "%",
+      "collected_at": "2024-03-08"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N07-LAB-A1C-1",
+      "patient_ref": "P-N07",
+      "code": "A1C",
+      "value": "6.2",
+      "unit": "%",
+      "collected_at": "2024-03-28"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "NORTH-P-N08-LAB-A1C-1",
+      "patient_ref": "P-N08",
+      "code": "A1C",
+      "value": "6.3",
+      "unit": "%",
+      "collected_at": "2024-03-10"
+    }
+  ]
+}

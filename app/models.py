@@ -406,3 +406,83 @@ class AuditLog(Base):
     entity_id: Mapped[str | None] = mapped_column(String(80), nullable=True)
     detail: Mapped[dict] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class RevisionEvaluation(Base):
+    """One differential attribution run: two protocol revisions x two data
+    cutoffs, evaluated as the four combinations.
+
+    The evaluation is an assessment artefact: it never creates snapshots,
+    never rewrites reports and never approves a revision. Its results go stale
+    when the underlying data or code mappings move on.
+    """
+
+    __tablename__ = "revision_evaluations"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    protocol_id: Mapped[int] = mapped_column(ForeignKey("protocols.id"))
+    old_revision_id: Mapped[int] = mapped_column(ForeignKey("protocol_revisions.id"))
+    new_revision_id: Mapped[int] = mapped_column(ForeignKey("protocol_revisions.id"))
+    old_cutoff_id: Mapped[int] = mapped_column(ForeignKey("cutoff_batches.id"))
+    new_cutoff_id: Mapped[int] = mapped_column(ForeignKey("cutoff_batches.id"))
+    status: Mapped[str] = mapped_column(String(20), default="running")  # running|completed|failed|stale
+    budget_per_case: Mapped[int] = mapped_column(Integer, default=32)
+    input_fingerprint: Mapped[str] = mapped_column(String(64), default="")
+    condition_diff: Mapped[dict] = mapped_column(JSONB, default=dict)
+    change_variables: Mapped[list] = mapped_column(JSONB, default=list)
+    combos: Mapped[dict] = mapped_column(JSONB, default=dict)
+    summary: Mapped[dict] = mapped_column(JSONB, default=dict)
+    data_revisions: Mapped[dict] = mapped_column(JSONB, default=dict)
+    impact: Mapped[dict] = mapped_column(JSONB, default=dict)
+    msc_stats: Mapped[dict] = mapped_column(JSONB, default=dict)
+    stale_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_by: Mapped[str] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class EvaluationCase(Base):
+    """Per-subject four-combination comparison inside one evaluation."""
+
+    __tablename__ = "evaluation_cases"
+    __table_args__ = (UniqueConstraint("evaluation_id", "subject_id"),)
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    evaluation_id: Mapped[int] = mapped_column(ForeignKey("revision_evaluations.id"))
+    subject_id: Mapped[int] = mapped_column(ForeignKey("subjects.id"))
+    center_id: Mapped[int] = mapped_column(ForeignKey("centers.id"))
+    # outcome / index_date / reasons / evidence per combination key
+    # (old_old, new_old, old_new, new_new); null outcome = not in that scope.
+    outcomes: Mapped[dict] = mapped_column(JSONB, default=dict)
+    index_dates: Mapped[dict] = mapped_column(JSONB, default=dict)
+    reason_codes: Mapped[dict] = mapped_column(JSONB, default=dict)
+    evidence: Mapped[dict] = mapped_column(JSONB, default=dict)
+    category: Mapped[str] = mapped_column(String(30))  # unchanged|protocol_only|data_only|joint|masked
+    reason_changed: Mapped[bool] = mapped_column(Boolean, default=False)
+    condition_interaction: Mapped[bool] = mapped_column(Boolean, default=False)
+    condition_verdicts: Mapped[dict] = mapped_column(JSONB, default=dict)
+    endpoint_status: Mapped[dict] = mapped_column(JSONB, default=dict)
+    endpoint_attribution: Mapped[dict] = mapped_column(JSONB, default=dict)
+    data_tags: Mapped[list] = mapped_column(JSONB, default=list)
+    msc: Mapped[dict] = mapped_column(JSONB, default=dict)
+
+
+class MigrationDossier(Base):
+    """Migration dossier: which published analyses may keep referencing the
+    old cohort and which a researcher must re-confirm. Read-only with respect
+    to reports, snapshots and protocol revisions."""
+
+    __tablename__ = "migration_dossiers"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    evaluation_id: Mapped[int] = mapped_column(ForeignKey("revision_evaluations.id"))
+    protocol_id: Mapped[int] = mapped_column(ForeignKey("protocols.id"))
+    old_revision_id: Mapped[int] = mapped_column(ForeignKey("protocol_revisions.id"))
+    new_revision_id: Mapped[int] = mapped_column(ForeignKey("protocol_revisions.id"))
+    status: Mapped[str] = mapped_column(String(20), default="open")  # open|acknowledged
+    input_snapshot: Mapped[dict] = mapped_column(JSONB, default=dict)
+    analyses: Mapped[list] = mapped_column(JSONB, default=list)
+    case_changes: Mapped[dict] = mapped_column(JSONB, default=dict)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_by: Mapped[str] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)

@@ -1,0 +1,79 @@
+{
+  "center_code": "SOUTH",
+  "batch_code": "south-2024-wk15",
+  "records": [
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S01-LAB-CREATININE-1",
+      "patient_ref": "P-S01",
+      "code": "KREA",
+      "value": "170",
+      "unit": "µmol/L",
+      "collected_at": "26/02/2024",
+      "collected_at_note": "corrected after lab review"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S01-LAB-A1C-1",
+      "patient_ref": "P-S01",
+      "code": "A1C",
+      "value": "5.7",
+      "unit": "%",
+      "collected_at": "26/02/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S02-LAB-A1C-1",
+      "patient_ref": "P-S02",
+      "code": "A1C",
+      "value": "5.9",
+      "unit": "%",
+      "collected_at": "02/03/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S03-LAB-A1C-1",
+      "patient_ref": "P-S03",
+      "code": "A1C",
+      "value": "6.1",
+      "unit": "%",
+      "collected_at": "06/03/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S03B-LAB-A1C-1",
+      "patient_ref": "P-S03B",
+      "code": "A1C",
+      "value": "6.3",
+      "unit": "%",
+      "collected_at": "08/03/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S06-LAB-A1C-1",
+      "patient_ref": "P-S06",
+      "code": "A1C",
+      "value": "5.8",
+      "unit": "%",
+      "collected_at": "01/03/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S08-LAB-A1C-1",
+      "patient_ref": "P-S08",
+      "code": "A1C",
+      "value": "6.0",
+      "unit": "%",
+      "collected_at": "18/03/2024"
+    },
+    {
+      "record_type": "lab",
+      "source_uid": "SOUTH-P-S08B-LAB-A1C-1",
+      "patient_ref": "P-S08B",
+      "code": "A1C",
+      "value": "6.2",
+      "unit": "%",
+      "collected_at": "19/03/2024"
+    }
+  ]
+}

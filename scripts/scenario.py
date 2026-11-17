@@ -97,6 +97,77 @@ def upload_batch2(client: TestClient) -> dict[str, int]:
     }
 
 
+def upload_batch1b(client: TestClient) -> dict[str, int]:
+    return {
+        u["batch_code"]: post_upload(client, u)["id"] for u in fixtures.BATCH1B_UPLOADS
+    }
+
+
+def upload_batch3(client: TestClient) -> dict[str, int]:
+    return {
+        u["batch_code"]: post_upload(client, u)["id"] for u in fixtures.BATCH3_UPLOADS
+    }
+
+
+def upload_batch4(client: TestClient) -> dict[str, int]:
+    return {
+        u["batch_code"]: post_upload(client, u)["id"] for u in fixtures.BATCH4_UPLOADS
+    }
+
+
+def create_revision(client: TestClient, protocol_id: int, version: str, rules: dict) -> dict:
+    rev = client.post(
+        f"/protocols/{protocol_id}/revisions",
+        json={"version": version, "rules": rules},
+        headers=auth("reviewer"),
+    )
+    rev.raise_for_status()
+    rev = rev.json()
+    client.post(
+        f"/protocols/revisions/{rev['id']}/approve", headers=auth("reviewer")
+    ).raise_for_status()
+    return rev
+
+
+def run_evaluation(
+    client: TestClient,
+    old_revision_id: int,
+    new_revision_id: int,
+    old_cutoff_id: int,
+    new_cutoff_id: int,
+    budget_per_case: int = 32,
+    who: str = "analysis",
+):
+    return client.post(
+        "/revision-evaluations",
+        json={
+            "old_revision_id": old_revision_id,
+            "new_revision_id": new_revision_id,
+            "old_cutoff_id": old_cutoff_id,
+            "new_cutoff_id": new_cutoff_id,
+            "budget_per_case": budget_per_case,
+        },
+        headers=auth(who),
+    )
+
+
+def evaluation_cases(client: TestClient, evaluation_id: int) -> dict[str, dict]:
+    r = client.get(f"/revision-evaluations/{evaluation_id}/cases", headers=auth("analysis"))
+    r.raise_for_status()
+    return {c["study_id"]: c for c in r.json()}
+
+
+def decide_all_identity(client: TestClient, status: str = "rejected") -> int:
+    cands = client.get("/identity-candidates", headers=auth("privacy")).json()
+    for cand in cands:
+        client.post(
+            f"/identity-candidates/{cand['id']}/decide",
+            json={"status": status},
+            headers=auth("privacy"),
+        ).raise_for_status()
+    return len(cands)
+
+
 def make_cutoff(client: TestClient, label: str, upload_ids: list[int]) -> dict:
     r = client.post(
         "/cutoffs",

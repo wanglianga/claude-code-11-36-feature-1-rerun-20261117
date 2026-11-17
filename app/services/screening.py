@@ -35,6 +35,16 @@ from ..models import (
     SourceRecord,
     Subject,
 )
+from .conditions import (
+    FALSE,
+    TRUE,
+    UNKNOWN,
+    criteria_tree,
+    eval_endpoints,
+    eval_tree,
+    needed_kinds_codes,
+    required_diagnosis_codes,
+)
 
 INCLUDED = "included"
 INSUFFICIENT = "insufficient_data"
@@ -191,7 +201,7 @@ def _index_date(rules: dict, data: SubjectData):
         return None, 0, [], "anchor_date_missing"
 
     if basis == "first_diagnosis":
-        codes = (rules.get("inclusion", {}).get("diagnosis", {}) or {}).get("codes", [])
+        codes = required_diagnosis_codes(rules)
         dated = []
         for s, n in data.by_kind("diagnosis"):
             d = _date((n.normalized or {}).get("diagnosis_date"))
@@ -238,14 +248,21 @@ def evaluate_subject(
     data: SubjectData,
     identity_pending: bool,
     protocol_revision_id: int,
+    want_trace: bool = False,
 ) -> dict:
-    """Pure evaluation for one subject. Returns decision fields + fingerprint."""
+    """Pure evaluation for one subject. Returns decision fields + fingerprint.
+
+    With ``want_trace=True`` the result additionally carries the per-condition
+    three-state verdicts (``condition_verdicts``) and endpoint eligibility
+    (``endpoint_status``) used by revision evaluations.
+    """
     reasons: list[str] = []
     evidence: list[dict] = []
     outcome: str | None = None
     index_date: date | None = None
     visits_merged = 0
     safety_retain = False
+    tree_verdicts: dict | None = None
 
     # --- consent ---------------------------------------------------------
     consent, consent_norm, consent_evidence = _consent_state(data)
@@ -322,10 +339,19 @@ def evaluate_subject(
 
     # --- criteria --------------------------------------------------------
     if outcome is None:
-        outcome, reasons, evidence = _apply_criteria(rules, data, index_date, reasons, evidence)
+        if rules.get("criteria") is not None:
+            outcome, reasons, evidence, tree_verdicts = _apply_criteria_tree(
+                rules, data, index_date, reasons, evidence
+            )
+        else:
+            outcome, reasons, evidence = _apply_criteria(rules, data, index_date, reasons, evidence)
+            if want_trace:
+                # The official outcome stays with the flat evaluator; the
+                # compiled tree only supplies per-condition verdicts.
+                tree_verdicts = _trace_verdicts(rules, data, index_date)
 
     fingerprint = _fingerprint(rules, data, identity_pending)
-    return {
+    result = {
         "outcome": outcome,
         "reason_codes": reasons,
         "evidence": evidence,
@@ -334,6 +360,64 @@ def evaluate_subject(
         "safety_retain": safety_retain,
         "input_fingerprint": fingerprint,
     }
+    if want_trace:
+        result["condition_verdicts"] = tree_verdicts
+        result["endpoint_status"] = _trace_endpoints(rules, data, index_date, outcome)
+    return result
+
+
+def _apply_criteria_tree(rules, data: SubjectData, index_date: date, reasons, evidence):
+    """Criteria stage for revisions that carry a native ``criteria`` tree.
+
+    The consent/identity/normalization gates above are identical to the flat
+    path; only the criteria algebra differs (three-state condition tree).
+    """
+    tree = criteria_tree(rules)
+    needed_kinds, needed_codes = needed_kinds_codes(tree)
+    for s, n in data.records:
+        if n.kind not in needed_kinds:
+            continue
+        if needed_codes and n.kind == "lab" and (n.normalized or {}).get("code") not in needed_codes:
+            continue
+        if n.status in ("pending", "failed"):
+            reasons = reasons + [f"normalization_{n.status}:{n.kind}"] + list(n.issues or [])
+            evidence.append(
+                {
+                    "source_record_id": s.id,
+                    "record_type": n.kind,
+                    "reason": "normalization_pending",
+                }
+            )
+            return PENDING, reasons, evidence, {}
+    verdicts: dict = {}
+    if tree is None:
+        return INCLUDED, reasons, evidence, verdicts
+    result = eval_tree(tree, data, index_date, verdicts)
+    reasons.extend(result["reasons"])
+    evidence.extend(result["evidence"])
+    outcome = {TRUE: INCLUDED, FALSE: INELIGIBLE, UNKNOWN: INSUFFICIENT}[result["verdict"]]
+    return outcome, reasons, evidence, verdicts
+
+
+def _trace_verdicts(rules, data: SubjectData, index_date: date) -> dict:
+    tree = criteria_tree(rules)
+    if tree is None:
+        return {}
+    verdicts: dict = {}
+    eval_tree(tree, data, index_date, verdicts)
+    return verdicts
+
+
+def _trace_endpoints(rules, data: SubjectData, index_date: date | None, outcome: str) -> dict:
+    specs = rules.get("endpoints") or {}
+    if not specs:
+        return {}
+    if outcome != INCLUDED or index_date is None:
+        return {
+            key: {"status": "not_applicable", "reason": f"outcome:{outcome}", "evidence": []}
+            for key in specs
+        }
+    return eval_endpoints(rules, data, index_date)
 
 
 def _apply_criteria(rules, data: SubjectData, index_date: date, reasons, evidence):

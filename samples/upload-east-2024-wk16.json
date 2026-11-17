@@ -1,0 +1,15 @@
+{
+  "center_code": "EAST",
+  "batch_code": "east-2024-wk16",
+  "records": [
+    {
+      "record_type": "lab",
+      "source_uid": "EAST-P-E04-LAB-A1C-1",
+      "patient_ref": "P-E04",
+      "code": "A1C",
+      "value": "6.4",
+      "unit": "%",
+      "collected_at": "28.04.2024"
+    }
+  ]
+}
